@@ -26,7 +26,7 @@ const getData = async (Schema) => {
 
 (async() => {
 if(isProduction){
-    cron.schedule('0 15 * * FRI', async () => {
+    cron.schedule('0 10 * * FRI', async () => {
         try {            
             let db = await connect();
             await asyncForEach(Schemas, async (Schema) => {
@@ -49,6 +49,29 @@ if(isProduction){
             logger.error("There was a problem: ", err);
         }
    });
+   cron.schedule('0 18 * * SUN', async () => {
+    try {            
+        let db = await connect();
+        await asyncForEach(Schemas, async (Schema) => {
+            await getData(Schema);
+        });
+        let data = upcomingHearings.map(x => { 
+            delete x.type;
+            delete x.__v;
+            delete x._id;
+            if(x.witnesses.length == 0){
+                delete x.witnesses;
+            };
+            return x;
+        });
+        let overview = `There are ${data.length} hearings next week.`;
+        logger.info(`Sending data on ${data.length} hearings to ${JSON.stringify(process.env.EMAILS.split(" "))} on ${moment().format("llll")}`);
+        await mailer({ emails: process.env.EMAILS.split(" "), data: upcomingHearings, overview, mailDuringDevelopment: true });
+        db.disconnect();
+    } catch (err) {
+        logger.error("There was a problem: ", err);
+    }
+});
 } else {
     try {
         let db = await connect();
