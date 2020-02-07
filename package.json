@@ -1,0 +1,17 @@
+{
+  "name": "mongoChecker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "moment": "^2.24.0",
+    "mongoose": "^5.8.11",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.4.2",
+    "winston": "^3.2.1"
+  }
+}
