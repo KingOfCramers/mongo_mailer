@@ -12,7 +12,7 @@ var transporter = nodemailer.createTransport({
   },
 });
 
-module.exports = async ({users, mailDuringDevelopment}) => {
+module.exports = async ({users }) => {
 
   const promises = users.map(user => {
     let data = user.newHearings;

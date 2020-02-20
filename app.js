@@ -1,8 +1,5 @@
-require('dotenv').config();
-
 const moment = require('moment');
-
-const logger = require('./logger');
+const logger = require('./logger')(module);
 const {asyncForEach} = require('./util');
 const connect = require('./mongodb/connect');
 const {findWithSchema} = require('./mongodb/methods');
@@ -45,13 +42,9 @@ const Schemas = Object.values(require('./mongodb/schemas'));
 
   let users = setupUsers(data);
 
-  await mailer({
-    users,
-    mailDuringDevelopment: true,
-  });
-
-  if(process.env.NODE_ENV === 'production')
-    logger.info(`Emails sent.`);
+  await mailer({ users });
+  
+  logger.info(`Emails sent.`);
 
   db.disconnect();
 })();
